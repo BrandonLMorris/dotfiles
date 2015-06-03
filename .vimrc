@@ -1,14 +1,10 @@
 " The vimrc of Brandon L Morris
+" echo ">^.^<"
 
-filetype off
-call pathogen#infect()
-filetype plugin indent on
-set nocompatible
-set encoding=utf-8
 
 
 " Abbreviate sout to Java print statement
-iabb sout System.out.println("
+iabb sout System.out.println()<Left>
 
 
 " Number of lines that are checked for set commands
@@ -32,6 +28,9 @@ set visualbell t_vb=  " Turns off beep and flash for bell
 set mouse=a           " Enables mouse for scroll and positioning
 set colorcolumn=100   " Highlights the specific column
 set scrolloff=8       " Minimum lines to keep above/below cursor (for scrolling)
+" j and k move screen line, not 'file' line
+map j gj
+map k gk
 
 
 
@@ -45,6 +44,7 @@ set linebreak         " Handles soft wrapping for long lines
 nmap <leader>h :nohlsearch<CR>
 
 
+" --- Indentation Settings ---
 set autoindent        " Maintains current indent on next line
 set expandtab         " <Tab> will insert spaces
 set smarttab          " Similar to expandtab
@@ -54,6 +54,7 @@ set pastetoggle=<F2>  " Key that toggles paste option
 
 
 
+" --- Whitespace Settings ---
 set list              " Displays whitespace
 set listchars=tab:·\ ,eol:¬,trail:⋅,extends:❯,precedes:❮  " Sets whitespace characters
 set showbreak=↪
@@ -62,37 +63,73 @@ set backspace=indent,eol,start
 set noesckeys         " Disables function keys that start with <Esc> in insert mode
 
 
-
+" --- Buffer Saving Settings ---
 set noswapfile        " Disables swap file
 set nobackup          " Disables backing up a file before writing
-
-
 set autoread          " Re-reads a file that has been edited outside of vim
 set hidden            " Buffers become hidden (not unloaded) when abondoned
 
-" thanks Ian, http://statico.github.com/vim.html
-"   Convenience mappings for switching buffers
+
+" --- MAPPINGS!!! ---
+
+" Convenience mappings for switching buffers
 map <leader>] :bnext<CR>
 map <leader>[ :bprev<CR>
 nmap <leader>e :e#<CR>
 nmap <leader>p :CtrlPBuffer<CR>
 
+" Create split AND move focus to it
+nnoremap <leader>w <C-w>v<C-w>l
+nnoremap <leader>s <C-w>s<C-w>j
 
-" j and k move screen line, not 'file' line
-map j gj
-map k gk
+" Shorten moving between splits
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+
+" Open/close folds with <space>
+nnoremap <space> za
+
+" Delete line with -
+nnoremap - dd
+
+" Copy line below like in IntelliJ
+nnoremap <c-d> yyp
+
+" Delete line in insert mode
+inoremap <c-d> <esc>ddi
+
+" Open and read .vimrc on the fly
+:nnoremap <leader>ev :vsplit $MYVIMRC<cr><c-w>l
+:nnoremap <leader>sv :source $MYVIMRC<cr>
+
+" I would map leader to , if it didn't screw up finds
+":nnoremap <c-;> ,
+
+" Quick exit of insert mve
+inoremap jk <esc>
+
+
 
 " I always, ALWAYS hit ":W" instead of ":w"
 command! Q q
 command! W w
 
-" Fix Background color erase in tmux/screen
-"set t_ut=
+
 set t_Co=256
 syntax on
 let base16colorspace=256 " Access colors present in 256 colorspace
 colorscheme jellybeans
 
+" --- Pathogen Settings ---
+filetype off
+call pathogen#infect()
+filetype plugin indent on
+set nocompatible
+set encoding=utf-8
+" -------------------------
 
 " --- Plug.vim setup --- 
 call plug#begin('~/.vim/plugged')
@@ -146,20 +183,25 @@ let g:airline_enable_syntastic=1
 let g:airline_enable_branch=1
 "let g:airline_theme='badwolf'
 
-autocmd BufNewFile,BufRead *.markdown,*.md,*.mdown,*.mkd,*.mkdn
-            \ if &ft =~# '^\%(conf\|modula2\)$' |
-            \   set ft=markdown |
-            \ else |
-            \   setf markdown |
-            \ endif
+augroup markdown
+  autocmd!
+  autocmd BufNewFile,BufRead *.markdown,*.md,*.mdown,*.mkd,*.mkdn
+              \ if &ft =~# '^\%(conf\|modula2\)$' |
+              \   set ft=markdown |
+              \ else |
+              \   setf markdown |
+              \ endif
+augroup markdown END
 
 
 " --- NERDTree Settings ---
 " NERDTree toggle mapping
 map <C-n> :NERDTreeToggle ~/Dropbox/Programming<CR>
 " Closes vim if NERDTree is only window open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+augroup nerdtree
+  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
-" Opens NERDTree automatically if no file is specified
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+  " Opens NERDTree automatically if no file is specified
+  autocmd StdinReadPre * let s:std_in=1
+  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+augroup END
