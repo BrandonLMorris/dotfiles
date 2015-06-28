@@ -1,10 +1,26 @@
 " The vimrc of Brandon L Morris
 " echo ">^.^<"
 
+" Vimscript file settings
+" {{{
+augroup filetype_vim
+  autocmd!
+  autocmd FileType vim setlocal foldmethod=marker
+augroup END
+" }}}
 
+" Abbreviate sout to Java print statement (works correctly with space)
+iabb sout System.out.println();<Left><Left><C-R>=Eatchar('\s')<CR>
+" Similar abreviation with if
+" iabb if if (<C-R>=Eatchar('\s')<CR>
 
-" Abbreviate sout to Java print statement
-iabb sout System.out.println()<Left>
+" Necessary to get YouCompleteMe working at startup
+" {{{
+augroup ycm
+  autocmd!
+  autocmd BufRead,BufNewFile * :call youcompleteme#Enable()
+augroup END
+" }}}
 
 
 " Number of lines that are checked for set commands
@@ -20,6 +36,7 @@ set wildignore=*.class,*.o,*~,*.pyc,.git,third_party,node_modules " Ignore certa
 
 
 " --- Normal Mode Settings ---
+" {{{
 set relativenumber    " Lines display relative rather than absolute number
 set guioptions=       " Sets GUI options (none, CLI FTW)
 set ruler             " Displays current position in buffer
@@ -28,13 +45,16 @@ set visualbell t_vb=  " Turns off beep and flash for bell
 set mouse=a           " Enables mouse for scroll and positioning
 set colorcolumn=100   " Highlights the specific column
 set scrolloff=8       " Minimum lines to keep above/below cursor (for scrolling)
+set scroll=15         " Srolling moves 15 lines instead of 30
 " j and k move screen line, not 'file' line
 map j gj
 map k gk
+" }}}
 
 
 
 " --- Search Settings ---
+" {{{
 set incsearch         " Highlights searches as they are typed
 set smartcase         " If no lowercase, case-insensitive. If caps, case-sensitive
 set smartindent       " Automatic indentation
@@ -42,36 +62,42 @@ set cinkeys-=0#       " Keeps smartindent from messing up indent after typing a 
 set hlsearch          " Highlights all matches to the search
 set linebreak         " Handles soft wrapping for long lines
 nmap <leader>h :nohlsearch<CR>
+" }}}
 
 
 " --- Indentation Settings ---
+" {{{
 set autoindent        " Maintains current indent on next line
 set expandtab         " <Tab> will insert spaces
 set smarttab          " Similar to expandtab
 set tabstop=2         " Sets how many spaces upon tab
 set shiftwidth=2      " Number of spaces to use for each step of autoindent
 set pastetoggle=<F2>  " Key that toggles paste option
-
+" }}}
 
 
 " --- Whitespace Settings ---
+" {{{
 set list              " Displays whitespace
 set listchars=tab:·\ ,eol:¬,trail:⋅,extends:❯,precedes:❮  " Sets whitespace characters
 set showbreak=↪
 " Allows backspace over over autoindent, line breaks, and start of insert
 set backspace=indent,eol,start
 set noesckeys         " Disables function keys that start with <Esc> in insert mode
+" }}}
 
 
 " --- Buffer Saving Settings ---
+" {{{
 set noswapfile        " Disables swap file
 set nobackup          " Disables backing up a file before writing
 set autoread          " Re-reads a file that has been edited outside of vim
 set hidden            " Buffers become hidden (not unloaded) when abondoned
+" }}}
 
 
 " --- MAPPINGS!!! ---
-
+" {{{
 " Convenience mappings for switching buffers
 map <leader>] :bnext<CR>
 map <leader>[ :bprev<CR>
@@ -95,6 +121,9 @@ nnoremap <space> za
 " Delete line with -
 nnoremap - dd
 
+" Scroll down with \d
+nnoremap <leader>d <c-d>
+
 " Copy line below like in IntelliJ
 nnoremap <c-d> yyp
 
@@ -108,9 +137,31 @@ inoremap <c-d> <esc>ddi
 " I would map leader to , if it didn't screw up finds
 ":nnoremap <c-;> ,
 
-" Quick exit of insert mve
+" Quick exit of insert mode
 inoremap jk <esc>
 
+" Toggle mapping and function of the quickfix window
+nnoremap <leader>q :call QuickfixToggle()<cr>
+let g:quickfix_is_open = 0
+function! QuickfixToggle()
+  if g:quickfix_is_open
+    cclose
+    let g:quickfix_is_open = 0
+    execute g:quickfix_return_to_window . "wincmd w"
+  else
+    let g:quickfix_return_to_window = winnr()
+    copen 
+    let g:quickfix_is_open = 1
+  endif
+endfunction
+
+" Permits eating the trailing whitespace (in an abbreviation)
+function! Eatchar(pat)
+  let c = nr2char(getchar(0))
+  return (c =~ a:pat) ? '' : c
+endfunc
+
+" }}}
 
 
 " I always, ALWAYS hit ":W" instead of ":w"
@@ -118,20 +169,25 @@ command! Q q
 command! W w
 
 
+" Color Settings
+" {{{
 set t_Co=256
 syntax on
 let base16colorspace=256 " Access colors present in 256 colorspace
-colorscheme jellybeans
+"colorscheme jellybeans
+" }}}
 
 " --- Pathogen Settings ---
+" {{{
 filetype off
 call pathogen#infect()
 filetype plugin indent on
 set nocompatible
 set encoding=utf-8
-" -------------------------
+" ------------------------- }}}
 
-" --- Plug.vim setup --- 
+" --- Plug.vim setup ---
+" {{{
 call plug#begin('~/.vim/plugged')
 
 " Make sure to use single quotes
@@ -147,6 +203,8 @@ Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 
 " Using git URL
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
+Plug 'https://github.com/Valloric/YouCompleteMe.git'
+Plug 'https://github.com/christoomey/vim-tmux-navigator'
 
 " Plugin options
 Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
@@ -156,10 +214,11 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 
 call plug#end()
 
-" ----------------------
+" ---------------------- }}}
 
 
 " --- Syntastic setup ---
+" {{{
 " Syntastic recommended settings
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -192,9 +251,11 @@ augroup markdown
               \   setf markdown |
               \ endif
 augroup markdown END
+" }}}
 
 
 " --- NERDTree Settings ---
+" {{{
 " NERDTree toggle mapping
 map <C-n> :NERDTreeToggle ~/Dropbox/Programming<CR>
 " Closes vim if NERDTree is only window open
@@ -205,3 +266,4 @@ augroup nerdtree
   autocmd StdinReadPre * let s:std_in=1
   autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 augroup END
+" }}}

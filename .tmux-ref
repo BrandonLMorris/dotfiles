@@ -1,0 +1,43 @@
+# My tmux referance page
+# <Pr> refers to prefex (Usually <C-b> or <C-a>
+
+# Help
+<Pr> ?
+
+### WINDOWS ###
+
+# Create window
+<Pr> c
+
+# Switch window
+<Pr> n    next
+<Pr> p    previous
+<Pr> l    'last'
+<Pr> w    choose from list
+<Pr> 0... window number
+
+# Rename window
+<Pr> ,
+
+# Kill window
+<Pr> &
+
+
+
+### PANES ###
+
+# Create pane
+<Pr> "    split vertially
+<Pr> %    split horizontally
+
+# Kill pane
+<Pr> x
+
+# Display pane number
+<Pr> q
+
+# Navigate (w/ custom settings)
+<Pr> h    left
+<Pr> j    up
+<Pr> k    down
+<Pr> l    right

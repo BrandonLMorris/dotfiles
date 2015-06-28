@@ -1,0 +1,42 @@
+My Vim reference Page
+
+To keep some of the lesser-used commands handy for quick viewing
+
+
+{{ Windows }}
+Create new window                           <c-w> n
+Split horizontally                          <c-w> s
+Split vertially                             <c-w> v
+Close (hide) current window                 <c-w> c
+Switch windows                              <c-h> [left]
+                                            <c-j> [down]
+                                            <c-k> [up]
+                                            <c-l> [right]
+
+
+{{ Tabs }}
+*Consider using tmux tabs
+Open file in new tab                        :tabe {file}
+Move to next tab                            gt
+Move to prev tab                            gT
+
+
+{{ Search and Replace }}
+Replace foo with bar (confirm)              :%s/foo/bar/gc
+
+
+{{ NERDTree Mappings }}
+Open file, directory, bookmark              o (or <cr>)
+Open in new tab                             t
+Open in new split                           i
+Open in new vsplit                          s
+Change root to selected dir                 C
+Move tree up one node                       u
+Refresh (recursively)                       r
+Change CWD to current dir                   cd
+Change tree root to current CWD             CD
+Toggle hidden files                         I
+Toggle bookmarks display                    B
+Zoom                                        A
+Quick help                                  ?
+Bookmark current node w/ <name>(optional)   :Bookmark <name>
