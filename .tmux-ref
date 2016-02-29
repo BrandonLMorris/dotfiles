@@ -4,6 +4,20 @@
 # Help
 <Pr> ?
 
+### SESSIONS ###
+tmux                          start new
+tmux new -s myname            start new with session name "myname"
+tmux $                        rename current session
+:rename-session -t (old) (new) rename (old) session to (new)
+<Pr> :new<CR>
+tmux a[ttach] #               attach session number #
+tmux a -t mmyname             attach session named "myname"
+tmux ls                       list tmux sessions
+<Pr> s
+tmux kill-session -t myname   kill session "myname"
+<Pr> $                        name current session
+
+
 ### WINDOWS ###
 
 # Create window

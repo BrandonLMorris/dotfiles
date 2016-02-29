@@ -1,12 +1,15 @@
 My Vim reference Page
 
 To keep some of the lesser-used commands handy for quick viewing
+Additional help:
+  :help usr_41.txt
+  :help function-list
 
 
 {{ Windows }}
 Create new window                           <c-w> n
-Split horizontally                          <c-w> s
-Split vertially                             <c-w> v
+Split horizontally                          <c-w> s (\s)
+Split vertially                             <c-w> v (\w)
 Close (hide) current window                 <c-w> c
 Switch windows                              <c-h> [left]
                                             <c-j> [down]
@@ -23,6 +26,10 @@ Move to prev tab                            gT
 
 {{ Search and Replace }}
 Replace foo with bar (confirm)              :%s/foo/bar/gc
+
+{{ Folds }}
+Open all folds                              zR
+Close all folds                             zM
 
 
 {{ NERDTree Mappings }}

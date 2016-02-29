@@ -1,6 +1,10 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
+
+# Attempt to setup powerline
+. /Library/Python/2.7/site-packages/powerline/bindings/zsh/powerline.zsh
+
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
@@ -11,7 +15,10 @@ ZSH_THEME="agnoster"
 # Attempt at setting up base16-shell
 if [ -n "$PS1" ]; then 
   eval "$(~/base16-shell/profile_helper.sh)"
-fi  
+fi
+
+# Set tab completion to ignore class files
+zstyle ':completion:*:*:vim:*:*files' ignored-patterns '*.class'
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -51,18 +58,19 @@ fi
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git web-search tmux wd)
+plugins=(git web-search tmux wd sublime)
 
 # Automatically start tmux session when opening zsh
-# ZSH_TMUX_AUTOSTART="true"
+ZSH_TMUX_AUTOSTART="true"
 
 source $ZSH/oh-my-zsh.sh
-source = ~/.profile
+source ~/.profile
 
 # User configuration
 
 # export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin:/usr/local/go/bin:$PATH"
 # export MANPATH="/usr/local/man:$MANPATH"
+export PATH="$HOME/Library/Haskell/bin:$PATH"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -102,7 +110,22 @@ function path(){
   echo "${PATH//:/$'\n'}"
 }
 
+function jtest () {
+  if [ "$1" == "-c"]
+  then
+    javac -cp "$2" "$3".java
+    java org.junit.runner.JUnitCore "$2"
+    rm *.class
+  else
+    java org.junit.runner.JUnitCore "$1"
+  fi
+}
+
 # Base16 Shell
-BASE16_SHELL="$HOME/.config/bas16-shell/base16-default.dark.sh"
+BASE16_SHELL="$HOME/.config/base16-shell/base16-google.dark.sh"
 [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#export BASE16="$HOME/.config/base16-shell/
+
+# Start a tmux session
+#tmux

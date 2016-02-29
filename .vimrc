@@ -1,26 +1,17 @@
 " The vimrc of Brandon L Morris
 " echo ">^.^<"
 
-" Vimscript file settings
-" {{{
-augroup filetype_vim
-  autocmd!
-  autocmd FileType vim setlocal foldmethod=marker
-augroup END
-" }}}
-
 " Abbreviate sout to Java print statement (works correctly with space)
 iabb sout System.out.println();<Left><Left><C-R>=Eatchar('\s')<CR>
+" Abbreviate aae to Assert.assertEquals() for junit tests
+iabb aae Assert.assertEquals();<Left><Left><C-R>=Eatchar('\')<CR>
 " Similar abreviation with if
 " iabb if if (<C-R>=Eatchar('\s')<CR>
+" Similar abbreviation with {}
+"iabb { {}<Left><CR><C-R>=Eatchar('\n')<CR><Up><Tab>
 
-" Necessary to get YouCompleteMe working at startup
-" {{{
-augroup ycm
-  autocmd!
-  autocmd BufRead,BufNewFile * :call youcompleteme#Enable()
-augroup END
-" }}}
+" Fold code based on the language's syntax
+set foldmethod=syntax
 
 
 " Number of lines that are checked for set commands
@@ -43,14 +34,13 @@ set ruler             " Displays current position in buffer
 set cursorline        " Higlights current line
 set visualbell t_vb=  " Turns off beep and flash for bell
 set mouse=a           " Enables mouse for scroll and positioning
-set colorcolumn=100   " Highlights the specific column
+set colorcolumn=79    " Highlights the specific column
 set scrolloff=8       " Minimum lines to keep above/below cursor (for scrolling)
 set scroll=15         " Srolling moves 15 lines instead of 30
 " j and k move screen line, not 'file' line
 map j gj
 map k gk
 " }}}
-
 
 
 " --- Search Settings ---
@@ -60,7 +50,6 @@ set smartcase         " If no lowercase, case-insensitive. If caps, case-sensiti
 set smartindent       " Automatic indentation
 set cinkeys-=0#       " Keeps smartindent from messing up indent after typing a '#'
 set hlsearch          " Highlights all matches to the search
-set linebreak         " Handles soft wrapping for long lines
 nmap <leader>h :nohlsearch<CR>
 " }}}
 
@@ -84,6 +73,9 @@ set showbreak=↪
 " Allows backspace over over autoindent, line breaks, and start of insert
 set backspace=indent,eol,start
 set noesckeys         " Disables function keys that start with <Esc> in insert mode
+set textwidth=0       " Sets the width of the text
+set wrap              " Enables soft wrapping
+set linebreak         " Handles wrapping at certain characte/s
 " }}}
 
 
@@ -92,7 +84,7 @@ set noesckeys         " Disables function keys that start with <Esc> in insert m
 set noswapfile        " Disables swap file
 set nobackup          " Disables backing up a file before writing
 set autoread          " Re-reads a file that has been edited outside of vim
-set hidden            " Buffers become hidden (not unloaded) when abondoned
+set hidden            " Allows modified buffers in the background
 " }}}
 
 
@@ -114,11 +106,14 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+" Automagically add closing braces when typing opening brace
+" TODO: automatically put in newline and move cursor up
+inoremap { {}<Esc>i
 
 " Open/close folds with <space>
 nnoremap <space> za
 
-" Delete line with -
+" Scroll with -
 nnoremap - dd
 
 " Scroll down with \d
@@ -161,12 +156,11 @@ function! Eatchar(pat)
   return (c =~ a:pat) ? '' : c
 endfunc
 
-" }}}
-
 
 " I always, ALWAYS hit ":W" instead of ":w"
 command! Q q
 command! W w
+" }}}
 
 
 " Color Settings
@@ -177,6 +171,62 @@ let base16colorspace=256 " Access colors present in 256 colorspace
 "colorscheme jellybeans
 " }}}
 
+
+" Vimscript file settings
+" {{{
+augroup filetype_vim
+  autocmd!
+  autocmd FileType vim setlocal foldmethod=marker
+augroup END
+" }}}
+
+" C++ File settings
+" {{{
+augroup cpp
+  autocmd!
+  autocmd BufNewFile,BufRead *.cpp,*.cc iabb st std::
+augroup END
+" }}}
+
+
+" crontab File settings
+" {{{
+augroup crontabsettings
+  autocmd!
+  autocmd filetype crontab setlocal nobackup nowritebackup
+augroup END
+" }}}
+
+
+" Necessary to get YouCompleteMe working at startup
+" {{{
+augroup ycm
+  autocmd!
+  autocmd BufRead,BufNewFile * :call youcompleteme#Enable()
+augroup END
+" }}}
+
+
+" Unfold everything on start-up
+" {{{
+augroup folding
+  autocmd!
+  autocmd BufWinEnter * :normal zR
+augroup END
+" }}}
+
+
+" Highlight occurances of word under cursor
+" Obtained from Dr. Overbey, who found it on Stack Overflow
+" https://stackoverflow.com/questions/1551231/highlight-variable-under-cursor-in-vim-like-in-netbeans
+" {{{
+augroup highlightocc
+  autocmd!
+  autocmd CursorMoved * exe printf('match Underlined /\V\<%s\>/', escape(expand('<cword>'),'/\'))
+augroup END
+" }}}
+
+
 " --- Pathogen Settings ---
 " {{{
 filetype off
@@ -184,9 +234,10 @@ call pathogen#infect()
 filetype plugin indent on
 set nocompatible
 set encoding=utf-8
-" ------------------------- }}}
+" }}}
 
-" --- Plug.vim setup ---
+
+" --- Plug.vim Settings ---
 " {{{
 call plug#begin('~/.vim/plugged')
 
@@ -206,18 +257,28 @@ Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 Plug 'https://github.com/Valloric/YouCompleteMe.git'
 Plug 'https://github.com/christoomey/vim-tmux-navigator'
 
+" StackAnswers - Search Stack Overflow inside vim
+Plug 'https://github.com/james9909/stackanswers.vim.git'
+let g:stack_filter = "accepted"
+
+" vim-gitgutter
+Plug 'airblade/vim-gitgutter'
+
 " Plugin options
 Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 
+" Scala support
+Plug 'derekwyatt/vim-scala'
+
 call plug#end()
 
-" ---------------------- }}}
+" }}}
 
 
-" --- Syntastic setup ---
+" --- Syntastic Setting ---
 " {{{
 " Syntastic recommended settings
 set statusline+=%#warningmsg#
@@ -229,8 +290,11 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+let g:syntastic_java_javac_classpath = ".\n/Users/bmorris/junit-4.12.jar\n../*.java""
 let g:syntastic_cpp_checkers=['gcc']
+let g:syntastic_c_checkers=['gcc']
 let g:syntastic_javascript_checkers=['jshint']
+let g:syntastic_scala_checkers=['fsc']
 let g:syntastic_python_checkers=['flake8']
 let g:syntastic_python_flake8_args="--select=W402,W403,W404,W405,W801,W802,W803,W804,W805,W806"
 let g:syntastic_mode_map = { 'mode': 'active',
@@ -266,4 +330,19 @@ augroup nerdtree
   autocmd StdinReadPre * let s:std_in=1
   autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 augroup END
+" }}}
+
+
+" --- YouCompleteMe Settings ---
+" {{{
+let g:ycm_global_ycm_conf = '~/.ycm_extra_conf'
+let g:ycm_confirm_extra_conf = 0
+" }}}
+
+
+" --- Powerline Setup ---
+" {{{
+python from powerline.vim import setup as powerline_setup
+python powerline_setup()
+python del powerline_setup
 " }}}
