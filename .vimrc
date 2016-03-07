@@ -1,14 +1,6 @@
 " The vimrc of Brandon L Morris
 " echo ">^.^<"
 
-" Abbreviate sout to Java print statement (works correctly with space)
-iabb sout System.out.println();<Left><Left><C-R>=Eatchar('\s')<CR>
-" Abbreviate aae to Assert.assertEquals() for junit tests
-iabb aae Assert.assertEquals();<Left><Left><C-R>=Eatchar('\')<CR>
-" Similar abreviation with if
-" iabb if if (<C-R>=Eatchar('\s')<CR>
-" Similar abbreviation with {}
-"iabb { {}<Left><CR><C-R>=Eatchar('\n')<CR><Up><Tab>
 
 " Fold code based on the language's syntax
 set foldmethod=syntax
@@ -24,6 +16,20 @@ set wildmenu                      " Show possible completions on command line
 set wildmode=list:longest,full    " List all options and complete
 set wildignore=*.class,*.o,*~,*.pyc,.git,third_party,node_modules " Ignore certain files in 
                                                                   " tab completion
+
+" --- Abbreviations ---
+" {{{
+" Abbreviate sout to Java print statement (works correctly with space)
+iabb sout System.out.println();<Left><Left><C-R>=Eatchar('\s')<CR>
+
+" Abbreviate aae to Assert.assertEquals() for junit tests
+iabb aae Assert.assertEquals();<Left><Left><C-R>=Eatchar('\')<CR>
+
+" Similar abreviation with if
+" iabb if if (<C-R>=Eatchar('\s')<CR>
+" Similar abbreviation with {}
+"iabb { {}<Left><CR><C-R>=Eatchar('\n')<CR><Up><Tab>
+"}}}
 
 
 " --- Normal Mode Settings ---
@@ -133,7 +139,7 @@ inoremap <c-d> <esc>ddi
 ":nnoremap <c-;> ,
 
 " Quick exit of insert mode
-inoremap jk <esc>
+inoremap kj <esc>
 
 " Toggle mapping and function of the quickfix window
 nnoremap <leader>q :call QuickfixToggle()<cr>
@@ -180,6 +186,7 @@ augroup filetype_vim
 augroup END
 " }}}
 
+
 " C++ File settings
 " {{{
 augroup cpp
@@ -189,11 +196,20 @@ augroup END
 " }}}
 
 
+" Python File settings
+" {{{
+augroup python
+  autocmd!
+  autocmd FileType python setlocal foldmethod=indent
+augroup END
+" }}}
+
+
 " crontab File settings
 " {{{
 augroup crontabsettings
   autocmd!
-  autocmd filetype crontab setlocal nobackup nowritebackup
+  autocmd FileType crontab setlocal nobackup nowritebackup
 augroup END
 " }}}
 
@@ -273,6 +289,9 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 " Scala support
 Plug 'derekwyatt/vim-scala'
 
+" Fuzzy file finding
+Plug 'kien/ctrlp.vim'
+
 call plug#end()
 
 " }}}
@@ -286,7 +305,7 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
+let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
@@ -295,7 +314,7 @@ let g:syntastic_cpp_checkers=['gcc']
 let g:syntastic_c_checkers=['gcc']
 let g:syntastic_javascript_checkers=['jshint']
 let g:syntastic_scala_checkers=['fsc']
-let g:syntastic_python_checkers=['flake8']
+let g:syntastic_python_checkers=['pylint']
 let g:syntastic_python_flake8_args="--select=W402,W403,W404,W405,W801,W802,W803,W804,W805,W806"
 let g:syntastic_mode_map = { 'mode': 'active',
                            \ 'active_filetypes': ['python', 'javascript'],
@@ -305,6 +324,17 @@ set laststatus=2
 let g:airline_enable_syntastic=1
 let g:airline_enable_branch=1
 "let g:airline_theme='badwolf'
+
+" Toggle the location list with ctl-e
+function! ToggleErrors()
+  let old_last_winnr = winnr('$')
+  lclose
+  if old_last_winnr == winnr('$')
+    " Nothing was closed, open the syntastic error location panel
+    Errors
+  endif
+endfunction
+nnoremap <silent> <C-r> :<C-u>call ToggleErrors()<CR>
 
 augroup markdown
   autocmd!
@@ -345,4 +375,11 @@ let g:ycm_confirm_extra_conf = 0
 python from powerline.vim import setup as powerline_setup
 python powerline_setup()
 python del powerline_setup
+" }}}
+
+
+" --- CtrlP Settings ---
+" {{{
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_working_path_mode = 'ra'
 " }}}

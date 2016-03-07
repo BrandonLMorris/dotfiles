@@ -122,7 +122,7 @@ function jtest () {
 }
 
 # Base16 Shell
-BASE16_SHELL="$HOME/.config/base16-shell/base16-google.dark.sh"
+BASE16_SHELL="$HOME/.config/base16-shell/base16-solarized.dark.sh"
 [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 #export BASE16="$HOME/.config/base16-shell/
