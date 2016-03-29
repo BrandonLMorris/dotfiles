@@ -114,7 +114,7 @@ nnoremap <C-l> <C-w>l
 
 " Automagically add closing braces when typing opening brace
 " TODO: automatically put in newline and move cursor up
-inoremap { {}<Esc>i
+" inoremap { {}<Esc>i
 
 " Open/close folds with <space>
 nnoremap <space> za
@@ -126,7 +126,7 @@ nnoremap - dd
 nnoremap <leader>d <c-d>
 
 " Copy line below like in IntelliJ
-nnoremap <c-d> yyp
+" nnoremap <c-d> yyp
 
 " Delete line in insert mode
 inoremap <c-d> <esc>ddi
@@ -173,8 +173,8 @@ command! W w
 " {{{
 set t_Co=256
 syntax on
-let base16colorspace=256 " Access colors present in 256 colorspace
-"colorscheme jellybeans
+" let base16colorspace=256 " Access colors present in 256 colorspace
+" colo seoul256
 " }}}
 
 
@@ -218,7 +218,7 @@ augroup END
 " {{{
 augroup ycm
   autocmd!
-  autocmd BufRead,BufNewFile * :call youcompleteme#Enable()
+  autocmd VimEnter * :call youcompleteme#Enable()
 augroup END
 " }}}
 
@@ -285,12 +285,28 @@ Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+set runtimepath+=~/.fzf
 
 " Scala support
 Plug 'derekwyatt/vim-scala'
 
 " Fuzzy file finding
 Plug 'kien/ctrlp.vim'
+
+" Task management with TaskWarrior
+Plug 'blindFS/vim-taskwarrior'
+
+" vimwiki
+Plug 'vimwiki/vimwiki'
+
+" vim calendar
+Plug 'itchyny/calendar.vim'
+
+" delimitMate: autocompletes quotes, parens, brackets, etc
+Plug 'raimondi/delimitmate'
+
+" matchtag: highlight matching HTML tag under cursor
+Plug 'gregsexton/matchtag'
 
 call plug#end()
 
@@ -314,6 +330,7 @@ let g:syntastic_cpp_checkers=['gcc']
 let g:syntastic_c_checkers=['gcc']
 let g:syntastic_javascript_checkers=['jshint']
 let g:syntastic_scala_checkers=['fsc']
+let g:syntastic_python_python_exec = '/usr/local/bin/python3'
 let g:syntastic_python_checkers=['pylint']
 let g:syntastic_python_flake8_args="--select=W402,W403,W404,W405,W801,W802,W803,W804,W805,W806"
 let g:syntastic_mode_map = { 'mode': 'active',
@@ -334,7 +351,7 @@ function! ToggleErrors()
     Errors
   endif
 endfunction
-nnoremap <silent> <C-r> :<C-u>call ToggleErrors()<CR>
+nnoremap <c-z> :<C-u>call ToggleErrors()<CR>
 
 augroup markdown
   autocmd!
@@ -352,13 +369,15 @@ augroup markdown END
 " {{{
 " NERDTree toggle mapping
 map <C-n> :NERDTreeToggle ~/Dropbox/Programming<CR>
+let NERDTreeIgnore = ['\.pyc', '__pycache__']
 " Closes vim if NERDTree is only window open
 augroup nerdtree
+  autocmd!
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
   " Opens NERDTree automatically if no file is specified
   autocmd StdinReadPre * let s:std_in=1
-  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+  " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 augroup END
 " }}}
 
@@ -372,9 +391,9 @@ let g:ycm_confirm_extra_conf = 0
 
 " --- Powerline Setup ---
 " {{{
-python from powerline.vim import setup as powerline_setup
-python powerline_setup()
-python del powerline_setup
+python3 from powerline.vim import setup as powerline_setup
+python3 powerline_setup()
+python3 del powerline_setup
 " }}}
 
 
@@ -383,3 +402,28 @@ python del powerline_setup
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_working_path_mode = 'ra'
 " }}}
+
+
+" --- Calendar.vim Settings ---
+let g:calendar_google_calendar = 1
+let g:calendar_google_task = 1
+" TODO: Make these toggle instead of just opening
+nnoremap <leader>c :Calendar -view=year -split=vertical -width=27<CR>
+nnoremap <leader>C :Calendar<CR>
+
+
+" --- Seoul256 Settings ---
+" Just setting the colorscheme, but has to be done after the plugin gets
+" initialized
+colo seoul256
+
+
+" --- Vimwiki Settings ---
+" {{{
+let g:vimwiki_list = [{
+  \ 'path': '$HOME/vimwiki',
+  \ 'template_path': '$HOME/vimwiki_templates',
+  \ 'template_default': 'default',
+  \ 'template_ext': '.html'}]
+" }}}
+

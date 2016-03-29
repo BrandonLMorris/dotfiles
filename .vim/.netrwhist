@@ -1,4 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_cnt =5
 let g:netrw_dirhist_1='/Users/bmorris/Dropbox/Programming/ACM/Gnomes'
 let g:netrw_dirhist_2='/Users/bmorris/.vim'
+let g:netrw_dirhist_3='/Users/bmorris/vimwiki/thinkster: A Better Way to Learn AngularJS'
+let g:netrw_dirhist_4='/Users/bmorris/vimwiki/python/flask'
+let g:netrw_dirhist_5='/Users/bmorris/Dropbox/Programming/c'
