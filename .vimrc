@@ -3,7 +3,7 @@
 
 
 " Fold code based on the language's syntax
-set foldmethod=syntax
+set foldmethod=indent
 
 
 " Number of lines that are checked for set commands
@@ -123,13 +123,13 @@ nnoremap <space> za
 nnoremap - dd
 
 " Scroll down with \d
-nnoremap <leader>d <c-d>
+" nnoremap <leader>d <c-d>
 
 " Copy line below like in IntelliJ
 " nnoremap <c-d> yyp
 
 " Delete line in insert mode
-inoremap <c-d> <esc>ddi
+" inoremap <c-d> <esc>ddi
 
 " Open and read .vimrc on the fly
 :nnoremap <leader>ev :vsplit $MYVIMRC<cr><c-w>l
@@ -308,6 +308,30 @@ Plug 'raimondi/delimitmate'
 " matchtag: highlight matching HTML tag under cursor
 Plug 'gregsexton/matchtag'
 
+" matrix screensaver
+Plug 'uguu-org/vim-matrix-screensaver'
+
+" Tab naming with Taboo
+Plug 'gcmt/taboo.vim'
+
+" ultisnips
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
+
+" Tagbar: show file tags in a sidebar
+Plug 'majutsushi/tagbar'
+
+" View/manage github issues
+" Plug 'jaxbot/github-issues.vim'
+
+" Extended session management
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-session'
+
+" Golang dev stuff
+Plug 'fatih/vim-go'
+
+
 call plug#end()
 
 " }}}
@@ -342,7 +366,7 @@ let g:airline_enable_syntastic=1
 let g:airline_enable_branch=1
 "let g:airline_theme='badwolf'
 
-" Toggle the location list with ctl-e
+" Toggle the location list with ctl-z
 function! ToggleErrors()
   let old_last_winnr = winnr('$')
   lclose
@@ -368,7 +392,7 @@ augroup markdown END
 " --- NERDTree Settings ---
 " {{{
 " NERDTree toggle mapping
-map <C-n> :NERDTreeToggle ~/Dropbox/Programming<CR>
+map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore = ['\.pyc', '__pycache__']
 " Closes vim if NERDTree is only window open
 augroup nerdtree
@@ -421,9 +445,37 @@ colo seoul256
 " --- Vimwiki Settings ---
 " {{{
 let g:vimwiki_list = [{
-  \ 'path': '$HOME/vimwiki',
+  \ 'path': '$HOME/vimwiki/',
+  \ 'path_html': '',
+  \ 'auto_export': 1,
   \ 'template_path': '$HOME/vimwiki_templates',
   \ 'template_default': 'default',
   \ 'template_ext': '.html'}]
+  "\ 'custom_wiki2html': '~/customwiki2html.sh'}]
+  "\ 'syntax': 'markdown',
+  "\ 'ext2syntax': {'.wiki': 'markdown'},
+  "\ 'ext': '.md',
+
+" let g:vimwiki_ext2syntax = {'.wiki': 'markdown', '.md': 'markdown'}
+" let g:vimwiki_syntax = 'markdown'
+" let g:vimwiki_ext = '.md'
 " }}}
 
+
+" --- Taboo Settings ---
+" {{{
+" Save tab names as part of a session
+set sessionoptions+=tabpages,globals
+" "}}}
+
+
+" --- Tagbar Settings ---
+" {{{
+map <c-m> :TagbarToggle<cr>
+" }}}
+
+
+" --- vim-session Settings ---
+" Do NOT automatically save/load sessions
+let g:session_autoload = 'yes'
+let g:session_autosave = 'yes'

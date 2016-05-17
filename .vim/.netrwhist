@@ -1,7 +1,4 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =5
-let g:netrw_dirhist_1='/Users/bmorris/Dropbox/Programming/ACM/Gnomes'
-let g:netrw_dirhist_2='/Users/bmorris/.vim'
-let g:netrw_dirhist_3='/Users/bmorris/vimwiki/thinkster: A Better Way to Learn AngularJS'
-let g:netrw_dirhist_4='/Users/bmorris/vimwiki/python/flask'
-let g:netrw_dirhist_5='/Users/bmorris/Dropbox/Programming/c'
+let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_1='/private/var/folders/1m/7pd15jfx2lbfy62xw4wj1jpc0000gn/T/git-difftool.b1J0N/left'
+let g:netrw_dirhist_2='/Users/bmorris/sphinx-test/source'
