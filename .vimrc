@@ -1,5 +1,4 @@
 " The vimrc of Brandon L Morris
-" echo ">^.^<"
 
 
 " Fold code based on the language's syntax
@@ -52,6 +51,7 @@ map k gk
 " --- Search Settings ---
 " {{{
 set incsearch         " Highlights searches as they are typed
+set ignorecase
 set smartcase         " If no lowercase, case-insensitive. If caps, case-sensitive
 set smartindent       " Automatic indentation
 set cinkeys-=0#       " Keeps smartindent from messing up indent after typing a '#'
@@ -117,7 +117,7 @@ nnoremap <C-l> <C-w>l
 " inoremap { {}<Esc>i
 
 " Open/close folds with <space>
-nnoremap <space> za
+nnoremap <space> zA
 
 " Scroll with -
 nnoremap - dd
@@ -242,6 +242,27 @@ augroup highlightocc
 augroup END
 " }}}
 
+" Remove inactive buffers
+function! DeleteInactiveBufs()
+    "From tabpagebuflist() help, get a list of all buffers in all tabs
+    let tablist = []
+    for i in range(tabpagenr('$'))
+        call extend(tablist, tabpagebuflist(i + 1))
+    endfor
+
+    "Below originally inspired by Hara Krishna Dara and Keith Roberts
+    "http://tech.groups.yahoo.com/group/vim/message/56425
+    let nWipeouts = 0
+    for i in range(1, bufnr('$'))
+        if bufexists(i) && !getbufvar(i,"&mod") && index(tablist, i) == -1
+            " bufno exists AND isn't modified AND isn't in the list of buffers
+            " open in windows and tabs
+            silent exec 'bwipeout' i
+            let nWipeouts = nWipeouts + 1
+        endif
+    endfor
+    echomsg nWipeouts . ' buffer(s) wiped out'
+endfunction
 
 " --- Pathogen Settings ---
 " {{{
