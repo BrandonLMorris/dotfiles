@@ -1,4 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
-let g:netrw_dirhist_1='/private/var/folders/1m/7pd15jfx2lbfy62xw4wj1jpc0000gn/T/git-difftool.b1J0N/left'
-let g:netrw_dirhist_2='/Users/bmorris/sphinx-test/source'

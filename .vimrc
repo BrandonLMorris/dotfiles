@@ -1,5 +1,6 @@
 " The vimrc of Brandon L Morris
 
+set cm=blowfish2
 
 " Fold code based on the language's syntax
 set foldmethod=indent
@@ -22,7 +23,19 @@ set wildignore=*.class,*.o,*~,*.pyc,.git,third_party,node_modules " Ignore certa
 iabb sout System.out.println();<Left><Left><C-R>=Eatchar('\s')<CR>
 
 " Abbreviate aae to Assert.assertEquals() for junit tests
-iabb aae Assert.assertEquals();<Left><Left><C-R>=Eatchar('\')<CR>
+iabb aae Assert.assertEquals();<Left><Left><C-R>=Eatchar('\s')<CR>
+
+iab texframe 
+\<CR>\begin{frame}
+\<CR>\frametitle{}
+\<CR>
+\<CR>\end{frame}<Up><C-R>=Eatchar('\s')<CR>
+
+iab texitems 
+\<CR>\begin{itemize}
+\<CR>\item
+\<CR>\end{itemize}<Up>
+
 
 " Similar abreviation with if
 " iabb if if (<C-R>=Eatchar('\s')<CR>
@@ -106,6 +119,8 @@ nmap <leader>p :CtrlPBuffer<CR>
 nnoremap <leader>w <C-w>v<C-w>l
 nnoremap <leader>s <C-w>s<C-w>j
 
+nnoremap <leader>o :make open<CR>
+
 " Shorten moving between splits
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
@@ -139,7 +154,7 @@ nnoremap - dd
 ":nnoremap <c-;> ,
 
 " Quick exit of insert mode
-inoremap kj <esc>
+" inoremap kj <esc>
 
 " Toggle mapping and function of the quickfix window
 nnoremap <leader>q :call QuickfixToggle()<cr>
@@ -177,6 +192,15 @@ syntax on
 " colo seoul256
 " }}}
 
+" Automatically spellcheck for markdown and latex
+augroup spellcheck
+  autocmd!
+  autocmd BufRead,BufNewFile *.md setlocal spell spelllang=en_us textwidth=80 colorcolumn=80
+  autocmd BufRead,BufNewFile *.markdown setlocal spell spelllang=en_us textwidth=80 colorcolumn=80
+  autocmd BufRead,BufNewFile *.tex setlocal spell spelllang=en_us textwidth=80 colorcolumn=80
+  autocmd BufRead,BufNewFile *.wiki setlocal spell spelllang=en_us textwidth=80 colorcolumn=80
+augroup END
+
 
 " Vimscript file settings
 " {{{
@@ -185,6 +209,11 @@ augroup filetype_vim
   autocmd FileType vim setlocal foldmethod=marker
 augroup END
 " }}}
+
+augroup filetype_vimwiki
+  autocmd!
+  "autocmd FileType vimwiki echo "hey there!"
+augroup END
 
 
 " C++ File settings
@@ -267,6 +296,7 @@ endfunction
 " --- Pathogen Settings ---
 " {{{
 filetype off
+filetype plugin on
 call pathogen#infect()
 filetype plugin indent on
 set nocompatible
@@ -278,25 +308,26 @@ set encoding=utf-8
 " {{{
 call plug#begin('~/.vim/plugged')
 
-" Make sure to use single quotes
-Plug 'junegunn/seoul256.vim'
+Plug 'junegunn/goyo.vim' " Distraction-free writing
+" Plug 'eugen0329/vim-esearch'
+Plug 'junegunn/seoul256.vim' " Great color theme
 Plug 'junegunn/vim-easy-align'
 
 " Group dependencies, vim-snippets depends on ultrisnips
 "Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 "
-" On-demand loading
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'Xuyuanp/nerdtree-git-plugin'
+" Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 
 " Using git URL
-Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-Plug 'https://github.com/Valloric/YouCompleteMe.git'
-Plug 'https://github.com/christoomey/vim-tmux-navigator'
+" Plug 'https://github.com/junegunn/vim-github-dashboard.git'
+Plug 'Valloric/YouCompleteMe'
+Plug 'christoomey/vim-tmux-navigator'
 
 " StackAnswers - Search Stack Overflow inside vim
-Plug 'https://github.com/james9909/stackanswers.vim.git'
-let g:stack_filter = "accepted"
+" Plug 'https://github.com/james9909/stackanswers.vim.git'
+" let g:stack_filter = "accepted"
 
 " vim-gitgutter
 Plug 'airblade/vim-gitgutter'
@@ -309,7 +340,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 set runtimepath+=~/.fzf
 
 " Scala support
-Plug 'derekwyatt/vim-scala'
+" Plug 'derekwyatt/vim-scala'
 
 " Fuzzy file finding
 Plug 'kien/ctrlp.vim'
@@ -330,7 +361,7 @@ Plug 'raimondi/delimitmate'
 Plug 'gregsexton/matchtag'
 
 " matrix screensaver
-Plug 'uguu-org/vim-matrix-screensaver'
+" Plug 'uguu-org/vim-matrix-screensaver'
 
 " Tab naming with Taboo
 Plug 'gcmt/taboo.vim'
@@ -350,7 +381,9 @@ Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
 
 " Golang dev stuff
-Plug 'fatih/vim-go'
+" Plug 'fatih/vim-go'
+
+Plug 'lervag/vimtex'
 
 
 call plug#end()
@@ -375,11 +408,11 @@ let g:syntastic_cpp_checkers=['gcc']
 let g:syntastic_c_checkers=['gcc']
 let g:syntastic_javascript_checkers=['jshint']
 let g:syntastic_scala_checkers=['fsc']
-let g:syntastic_python_python_exec = '/usr/local/bin/python3'
-let g:syntastic_python_checkers=['pylint']
+" let g:syntastic_python_python_exec = '/usr/local/bin/python3'
+let g:syntastic_python_checkers=['pyflakes']
 let g:syntastic_python_flake8_args="--select=W402,W403,W404,W405,W801,W802,W803,W804,W805,W806"
 let g:syntastic_mode_map = { 'mode': 'active',
-                           \ 'active_filetypes': ['python', 'javascript'],
+                           \ 'active_filetypes': ['javascript'],
                            \ 'passive_filetypes': ['html'] }
 
 set laststatus=2
@@ -415,6 +448,8 @@ augroup markdown END
 " NERDTree toggle mapping
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore = ['\.pyc', '__pycache__']
+
+" NEITHER OF THESE WORK :(
 " Closes vim if NERDTree is only window open
 augroup nerdtree
   autocmd!
@@ -424,6 +459,12 @@ augroup nerdtree
   autocmd StdinReadPre * let s:std_in=1
   " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 augroup END
+
+" Set the pwd to the currently open file
+augroup setpwd
+  autocmd!
+  autocmd BufEnter * lcd %:p:h
+augroup END
 " }}}
 
 
@@ -431,6 +472,12 @@ augroup END
 " {{{
 let g:ycm_global_ycm_conf = '~/.ycm_extra_conf'
 let g:ycm_confirm_extra_conf = 0
+" let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
+" let g:ycm_path_to_python_interpreter = '/usr/local/bin/python3'
+" 2018-03-22 YCM kept crashing, mysteriously fixed with compiled/run with
+" python2.7
+let g:ycm_server_python_interpreter = '/usr/local/bin/python2.7'
+let g:ycm_path_to_python_interpreter = '/usr/local/bin/python2.7'
 " }}}
 
 
@@ -480,6 +527,7 @@ let g:vimwiki_list = [{
 " let g:vimwiki_ext2syntax = {'.wiki': 'markdown', '.md': 'markdown'}
 " let g:vimwiki_syntax = 'markdown'
 " let g:vimwiki_ext = '.md'
+let g:vimwiki_global_ext = 0
 " }}}
 
 
@@ -487,6 +535,8 @@ let g:vimwiki_list = [{
 " {{{
 " Save tab names as part of a session
 set sessionoptions+=tabpages,globals
+let g:taboo_tab_format=" %N%f%m "
+let g:taboo_renamed_tab_format=" %N[%l]%m "
 " "}}}
 
 
