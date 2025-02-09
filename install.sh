@@ -5,6 +5,6 @@
 
 ln -sfv $(pwd)/.vim $HOME/.vim
 ln -sfv $(pwd)/.vimrc $HOME/.vimrc
-ln -sfv $(pwd)/.tmux.conf $HOME/.vimrc
+ln -sfv $(pwd)/.tmux.conf $HOME/.tmux.conf
 ln -sfv $(pwd)/.zshrc $HOME/.zshrc
 ln -sfv $(pwd)/.gitignore_global $HOME/.gitignore_global

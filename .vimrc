@@ -245,10 +245,10 @@ augroup END
 
 " Necessary to get YouCompleteMe working at startup
 " {{{
-augroup ycm
-  autocmd!
-  autocmd VimEnter * :call youcompleteme#Enable()
-augroup END
+" augroup ycm
+"   autocmd!
+"   autocmd VimEnter * :call youcompleteme#Enable()
+" augroup END
 " }}}
 
 
@@ -297,7 +297,7 @@ endfunction
 " {{{
 filetype off
 filetype plugin on
-call pathogen#infect()
+" call pathogen#infect()
 filetype plugin indent on
 set nocompatible
 set encoding=utf-8
@@ -322,7 +322,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Using git URL
 " Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-Plug 'Valloric/YouCompleteMe'
+" Plug 'Valloric/YouCompleteMe'
 Plug 'christoomey/vim-tmux-navigator'
 
 " StackAnswers - Search Stack Overflow inside vim
@@ -337,6 +337,7 @@ Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+set rtp+=/opt/homebrew/opt/fzf
 set runtimepath+=~/.fzf
 
 " Scala support
@@ -346,7 +347,7 @@ set runtimepath+=~/.fzf
 Plug 'kien/ctrlp.vim'
 
 " Task management with TaskWarrior
-Plug 'blindFS/vim-taskwarrior'
+" Plug 'blindFS/vim-taskwarrior'
 
 " vimwiki
 Plug 'vimwiki/vimwiki'
@@ -385,18 +386,24 @@ Plug 'xolox/vim-session'
 
 Plug 'lervag/vimtex'
 
+" Hex editing
+Plug 'fidian/hexmode'
+
 
 call plug#end()
 
 " }}}
 
+let g:fzf_vim = {}
+let g:fzf_vim.preview_window = ['right,50%', 'ctrl-t']
+
 
 " --- Syntastic Setting ---
 " {{{
 " Syntastic recommended settings
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 0
@@ -483,9 +490,9 @@ let g:ycm_path_to_python_interpreter = '/usr/local/bin/python2.7'
 
 " --- Powerline Setup ---
 " {{{
-python3 from powerline.vim import setup as powerline_setup
-python3 powerline_setup()
-python3 del powerline_setup
+" python3 from powerline.vim import setup as powerline_setup
+" python3 powerline_setup()
+" python3 del powerline_setup
 " }}}
 
 

@@ -1,16 +1,17 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
+export PATH="/Users/brandonmorris/.local/bin:/opt/homebrew/opt/ruby/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/Current/bin"
 
 # Attempt to setup powerline
-. /Library/Python/2.7/site-packages/powerline/bindings/zsh/powerline.zsh
+# . /Library/Python/2.7/site-packages/powerline/bindings/zsh/powerline.zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 DEFAULT_USER="bmorris"
-ZSH_THEME="agnoster"
+ZSH_THEME="robbyrussell"
 
 # Attempt at setting up base16-shell
 if [ -n "$PS1" ]; then 
@@ -61,7 +62,7 @@ zstyle ':completion:*:*:vim:*:*files' ignored-patterns '*.class'
 plugins=(git web-search tmux wd sublime)
 
 # Automatically start tmux session when opening zsh
-ZSH_TMUX_AUTOSTART="true"
+# ZSH_TMUX_AUTOSTART="true"
 
 source $ZSH/oh-my-zsh.sh
 source ~/.profile
@@ -70,7 +71,6 @@ source ~/.profile
 
 # export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin:/usr/local/go/bin:$PATH"
 # export MANPATH="/usr/local/man:$MANPATH"
-export PATH="$HOME/Library/Haskell/bin:$PATH"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -110,22 +110,6 @@ function path(){
   echo "${PATH//:/$'\n'}"
 }
 
-function jtest () {
-  if [ "$1" == "-c"]
-  then
-    javac -cp "$2" "$3".java
-    java org.junit.runner.JUnitCore "$2"
-    rm *.class
-  else
-    java org.junit.runner.JUnitCore "$1"
-  fi
-}
-
-# Base16 Shell
-BASE16_SHELL="$HOME/.config/base16-shell/base16-mocha.dark.sh"
-[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-#export BASE16="$HOME/.config/base16-shell/
 
-# Start a tmux session
-#tmux
+
